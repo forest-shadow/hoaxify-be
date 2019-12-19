@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.hoaxify.hoaxify.user.User;
 import com.hoaxify.hoaxify.user.UserRepository;
+import com.hoaxify.hoaxify.shared.GenericResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -58,5 +59,13 @@ public class UserControllerTest {
     User user = createValidUser();
     testRestTemplate.postForEntity(API_1_0_USERS, user, Object.class);
     assertThat(userRepository.count()).isEqualTo(1);
+  }
+
+  @Test
+  public void postUser_whenUserIsValid_receiveSuccessMessage() {
+    User user = createValidUser();
+    ResponseEntity<GenericResponse> response = testRestTemplate.postForEntity(API_1_0_USERS, user,
+        GenericResponse.class);
+    assertThat(response.getBody().getMessage()).isNotNull();
   }
 }
